@@ -5,8 +5,8 @@ export class Emoji {
   decimal!: string;
   id!: number;
   index!: number;
-  show?: boolean;
-  checked?: boolean;
+  show!: boolean;
+  checked!: boolean;
 }
 
 export class Leader {
