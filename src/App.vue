@@ -9,6 +9,7 @@ import Card from './components/Card.vue'
 const emojis: Ref<Emoji[]> = ref([]),
   leaderboard: Ref<Leader[]> = ref([]),
   username = ref(""),
+  savedScore = ref(false),
   win = ref(false),
   moves = ref(0),
   milliseconds = ref(0),
@@ -131,6 +132,7 @@ const newGame = async () => {
   milliseconds.value = 0
   seconds.value = 0
   minutes.value = 0
+  savedScore.value = false
 
   const fetchedEmojis = await fetchEmojis();
   const emojiList = randomEmojis(fetchedEmojis, 8);
@@ -155,7 +157,7 @@ const fetchLeaderboard = async () => {
     .from('leaderboard')
     .select('*')
     .order('seconds', { ascending: true })
-    .limit(10)
+    .limit(5)
     .returns<Leader[]>();
 
   if (error) {
@@ -166,8 +168,9 @@ const fetchLeaderboard = async () => {
   leaderboard.value = data;
 }
 
-const saveScore = async (e: Event) => {
-  e.preventDefault()
+const saveScore = async () => {
+  if (savedScore.value) return
+
   const body = [
     {
       username: username.value,
@@ -184,7 +187,10 @@ const saveScore = async (e: Event) => {
 
   if (error) return
 
-  if (data) fetchLeaderboard()
+  if (data) {
+    fetchLeaderboard()
+    savedScore.value = true
+  }
 }
 
 onMounted(async () => {
@@ -202,8 +208,8 @@ onMounted(async () => {
       <form class="win__form">
         <label class="win__label">Name</label>
         <div class="win__action">
-          <input v-model="username" type="text" class="win__input">
-          <button @click="saveScore" class="win__button">Save</button>
+          <input v-model="username" :disabled="savedScore" type="text" class="win__input">
+          <button @click.prevent="saveScore" class="win__button" :class="savedScore ? 'disabled' : ''">Save</button>
         </div>
       </form>
       <div>
@@ -237,18 +243,22 @@ onMounted(async () => {
   <footer>
     <h2>Leaderboard</h2>
     <table class="leaderboard">
-      <tr>
-        <th>Date</th>
-        <th>Username</th>
-        <th>Time</th>
-        <th>Moves</th>
-      </tr>
-      <tr v-for="leader in leaderboard">
-        <td v-text="new Date(leader.date).toLocaleDateString()"></td>
-        <td v-text="leader.username"></td>
-        <td v-text="leader.time"></td>
-        <td v-text="leader.moves"></td>
-      </tr>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Username</th>
+          <th>Time</th>
+          <th>Moves</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="leader in leaderboard">
+          <td v-text="new Date(leader.date).toLocaleDateString()"></td>
+          <td v-text="leader.username"></td>
+          <td v-text="leader.time"></td>
+          <td v-text="leader.moves" class="text-end"></td>
+        </tr>
+      </tbody>
     </table>
   </footer>
 </template>
@@ -293,7 +303,7 @@ main {
 
 .win--shadown {
   width: 100%;
-  height: 100vh;
+  height: 110vh;
   position: fixed;
 
   top: 0;
@@ -304,12 +314,12 @@ main {
 
 .win {
   position: fixed;
-  width: 20rem;
+  width: 90%;
   height: 11rem;
   top: 50%;
   left: 50%;
   margin-top: -5.5rem;
-  margin-left: -11rem;
+  margin-left: -45%;
 
   padding: 1rem;
   background-color: #000;
@@ -331,7 +341,12 @@ main {
   row-gap: 0.5rem;
 }
 
+.win__action {
+  display: flex;
+}
+
 .win__input {
+  width: 100%;
   border-radius: 8px 0 0 8px;
   border: 1px solid #04aa6d;
   padding: 0.7em 1.2em;
@@ -346,6 +361,11 @@ main {
   background-color: #04aa6d50;
 }
 
+.win__button.disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
 .win__new {
   border: 1px solid #04aa6d;
   background-color: #04aa6d;
@@ -357,9 +377,8 @@ table {
   width: 100%;
 }
 
-tr {
-
-  border: 1px solid #dddddd;
+tbody tr {
+  border-bottom: solid 1px rgb(61, 68, 73);
 }
 
 td,
@@ -369,6 +388,6 @@ th {
 }
 
 tr:nth-child(even) {
-  background-color: #131313;
+  background-color: rgb(61, 68, 73);
 }
 </style>
