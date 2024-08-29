@@ -314,11 +314,9 @@ main {
 
 .win {
   position: fixed;
-  width: 90%;
-  height: 11rem;
   top: 50%;
   left: 50%;
-  margin-top: -5.5rem;
+  margin-top: -10rem;
   margin-left: -45%;
 
   padding: 1rem;
@@ -362,7 +360,7 @@ main {
 }
 
 .win__button.disabled {
-  opacity: 0.8;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
