@@ -15,11 +15,19 @@ defineEmits(['showCard'])
 
 <style scoped>
 .card {
-  padding: 1rem;
+  min-width: 82px;
   aspect-ratio: 1;
   border: 1px solid #04aa6d;
   border-radius: 5px;
   cursor: pointer;
+
+  transform-style: preserve-3d;
+  transform-origin: center right;
+  transition: transform 0.5s;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .card:hover {
@@ -27,7 +35,7 @@ defineEmits(['showCard'])
   color: #F02E51;
 }
 
-.hidden {
+.card.hidden {
   --s: 30px;
 
   --_g: radial-gradient(#0000 70%, #1a2030 71%);
@@ -35,6 +43,8 @@ defineEmits(['showCard'])
     var(--_g), var(--_g) calc(var(--s)/2) calc(var(--s)/2),
     conic-gradient(#4E9F81 25%, #3D7D66 0 50%, #2D5B4A 0 75%, #1C392E 0);
   background-size: var(--s) var(--s);
+
+  transform: translateX(-100%) rotateY(-180deg);
 }
 
 .card__emoji {
