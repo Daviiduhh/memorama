@@ -270,6 +270,13 @@ main {
   row-gap: 1rem;
 }
 
+header,
+footer {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1rem;
+}
+
 .stats {
   display: flex;
   align-items: center;
