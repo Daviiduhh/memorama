@@ -126,6 +126,11 @@ const stopStopwatch = () => {
 const newGame = async () => {
   resetStopwatch();
   win.value = false;
+  moves.value = 0
+  matches.value = 0
+  milliseconds.value = 0
+  seconds.value = 0
+  minutes.value = 0
 
   const fetchedEmojis = await fetchEmojis();
   const emojiList = randomEmojis(fetchedEmojis, 8);
@@ -145,11 +150,12 @@ const newGame = async () => {
   }, 10)
 }
 
-const getLeaderboard = async () => {
+const fetchLeaderboard = async () => {
   const { data: data, error } = await supabase
     .from('leaderboard')
     .select('*')
     .order('seconds', { ascending: true })
+    .limit(10)
     .returns<Leader[]>();
 
   if (error) {
@@ -171,20 +177,19 @@ const saveScore = async (e: Event) => {
     }
   ]
 
-  console.log(body)
-
   const { data, error } = await supabase
     .from('leaderboard')
     .insert(body)
     .select()
 
-  console.log(data)
-  console.log(error)
+  if (error) return
+
+  if (data) fetchLeaderboard()
 }
 
 onMounted(async () => {
   newGame();
-  getLeaderboard();
+  fetchLeaderboard();
 })
 </script>
 
