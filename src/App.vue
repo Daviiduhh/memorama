@@ -305,6 +305,7 @@ main {
   width: 100%;
   height: 110vh;
   position: fixed;
+  z-index: 100;
 
   top: 0;
   left: 0;
@@ -313,11 +314,12 @@ main {
 }
 
 .win {
+  width: 22rem;
   position: fixed;
   top: 50%;
   left: 50%;
   margin-top: -10rem;
-  margin-left: -45%;
+  margin-left: -12rem;
 
   padding: 1rem;
   background-color: #000;
