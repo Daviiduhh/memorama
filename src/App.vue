@@ -169,7 +169,7 @@ const fetchLeaderboard = async () => {
 }
 
 const saveScore = async () => {
-  if (savedScore.value) return
+  if (savedScore.value || username.value === "") return
 
   const body = [
     {
@@ -208,7 +208,7 @@ onMounted(async () => {
       <form class="win__form">
         <label class="win__label">Name</label>
         <div class="win__action">
-          <input v-model="username" :disabled="savedScore" type="text" class="win__input">
+          <input v-model="username" :disabled="savedScore" type="text" class="win__input" maxlength="15">
           <button @click.prevent="saveScore" class="win__button" :class="savedScore ? 'disabled' : ''">Save</button>
         </div>
       </form>
@@ -384,7 +384,17 @@ tbody tr {
 td,
 th {
   text-align: left;
-  padding: 8px;
+  padding: 0.5em;
+}
+
+th {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+td {
+  font-size: 0.9rem;
+  font-weight: 300;
 }
 
 tr:nth-child(even) {
