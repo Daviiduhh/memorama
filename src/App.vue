@@ -76,7 +76,7 @@ const getEmojiGameboardList = (emojiList: Emoji[]) => {
 }
 
 const showCard = (card: Emoji) => {
-  if (card.show === true) return
+  if (card.show) return
 
   const visibleCards = emojis.value.filter(item => item.show)
 
@@ -86,33 +86,32 @@ const showCard = (card: Emoji) => {
     visibleCards.push(card)
   }
 
-  setTimeout(() => {
-    if (visibleCards.length === 2) {
-      const match = visibleCards.every(card => card.id === visibleCards[0].id)
+  if (visibleCards.length === 2) {
+    const match = visibleCards.every(card => card.id === visibleCards[0].id)
 
-      if (match) {
-        visibleCards[0].checked = true
-        visibleCards[1].checked = true
+    if (match) {
+      visibleCards[0].checked = true
+      visibleCards[1].checked = true
 
-        visibleCards[0].show = false
-        visibleCards[1].show = false
+      visibleCards[0].show = false
+      visibleCards[1].show = false
 
-        matches.value++
+      matches.value++
 
-        if (matches.value === 8) {
-          win.value = true
-          stopStopwatch()
-        }
-      } else {
-        visibleCards[0].show = false
-        visibleCards[1].show = false
+      if (matches.value === 8) {
+        win.value = true
+        stopStopwatch()
       }
+    } else {
+      setTimeout(() => {
+        visibleCards[0].show = false
+        visibleCards[1].show = false
+      }, 1000);
 
-      moves.value++
     }
-  }, 1000);
 
-
+    moves.value++
+  }
 }
 
 const resetStopwatch = () => {
